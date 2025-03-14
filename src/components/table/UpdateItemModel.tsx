@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { IoCloseCircleOutline } from "react-icons/io5";
 
 interface ProductConditions {
@@ -39,9 +40,26 @@ const UpdateItemModel: React.FC<UpdateItemModelProps> = ({
     return parts.join("; ");
   };
 
+  const [title, setTile] = useState(selectedItem?.title);
+  const [productConditions, setProductConditions] = useState(
+    formatProductConditions(selectedItem?.productConditions || {})
+  );
+  const [salesChannel, setSalesChannel] = useState(selectedItem?.salesChannel);
+
+  const fd = {
+    title,
+    productConditions,
+    salesChannel,
+  };
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setUpdateItemModel(false);
+    console.log(fd);
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="bg-gray-200 w-1/2 h-1/2 z-10 rounded p-5 shadow shadow-gray-300 relative">
+      <div className="bg-gray-200 w-96 md:w-1/2 h-1/2 z-10 rounded p-5 shadow shadow-gray-300 relative">
         <div className="flex justify-end">
           <span
             onClick={() => setUpdateItemModel(false)}
@@ -50,7 +68,10 @@ const UpdateItemModel: React.FC<UpdateItemModelProps> = ({
             <IoCloseCircleOutline size={25} />
           </span>
         </div>
-        <form className="border border-gray-300 p-5 rounded flex flex-col gap-5 mt-5">
+        <form
+          onSubmit={handleSubmit}
+          className="border border-gray-300 p-5 rounded flex flex-col gap-5 mt-5"
+        >
           <label
             htmlFor="title"
             className="relative block overflow-hidden border-b border-gray-200 bg-transparent pt-3 focus-within:border-blue-600"
@@ -60,6 +81,7 @@ const UpdateItemModel: React.FC<UpdateItemModelProps> = ({
               id="title"
               placeholder="title"
               defaultValue={selectedItem?.title}
+              onChange={(e) => setTile(e.target.value)}
               className="peer h-8 w-full border-none bg-transparent p-0 placeholder-transparent focus:border-transparent focus:ring-0 focus:outline-hidden sm:text-sm"
             />
 
@@ -81,6 +103,7 @@ const UpdateItemModel: React.FC<UpdateItemModelProps> = ({
                   ? formatProductConditions(selectedItem.productConditions)
                   : ""
               }
+              onChange={(e) => setProductConditions(e.target.value)}
               className="peer h-8 w-full border-none bg-transparent p-0 placeholder-transparent focus:border-transparent focus:ring-0 focus:outline-hidden sm:text-sm"
             />
 
@@ -98,6 +121,7 @@ const UpdateItemModel: React.FC<UpdateItemModelProps> = ({
               id="satis kanali"
               placeholder="satis kanali"
               defaultValue={selectedItem?.salesChannel}
+              onChange={(e) => setSalesChannel(e.target.value)}
               className="peer h-8 w-full border-none bg-transparent p-0 placeholder-transparent focus:border-transparent focus:ring-0 focus:outline-hidden sm:text-sm"
             />
 
