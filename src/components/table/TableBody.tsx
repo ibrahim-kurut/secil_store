@@ -3,6 +3,7 @@
 import { useState, useCallback } from "react";
 import { data as initialData } from "../../../data/collections";
 import swal from "sweetalert";
+import UpdateItemModel from "./UpdateItemModel";
 
 interface ProductConditions {
   colors?: string[];
@@ -10,6 +11,12 @@ interface ProductConditions {
   labels?: string[];
 }
 
+interface Product {
+  id: number;
+  title: string;
+  productConditions: ProductConditions;
+  salesChannel: string;
+}
 const formatProductConditions = (conditions: ProductConditions): string => {
   const parts = [];
 
@@ -28,6 +35,14 @@ const formatProductConditions = (conditions: ProductConditions): string => {
 
 const TableBody = () => {
   const [data, setData] = useState(initialData);
+  const [selectedItem, setSelectedItem] = useState<Product | null>(null);
+  const [updateItemModel, setUpdateItemModel] = useState(false);
+
+  // handle update items
+  const handleUpdateItem = (item: Product) => {
+    setSelectedItem(item);
+    setUpdateItemModel(true);
+  };
 
   const handleDelete = useCallback(
     (id: number) => {
@@ -71,7 +86,7 @@ const TableBody = () => {
                 <button
                   className="bg-green-500 hover:bg-green-700 text-white font-bold px-2 rounded"
                   aria-label="Edit Product"
-                  onClick={() => console.log(item)}
+                  onClick={() => handleUpdateItem(item)}
                 >
                   edit
                 </button>
@@ -87,6 +102,12 @@ const TableBody = () => {
           </tr>
         </tbody>
       ))}
+      {updateItemModel && (
+        <UpdateItemModel
+          setUpdateItemModel={setUpdateItemModel}
+          selectedItem={selectedItem}
+        />
+      )}
     </>
   );
 };
