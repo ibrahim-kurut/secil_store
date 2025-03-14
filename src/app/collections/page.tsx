@@ -8,9 +8,23 @@ import { IoMdSettings } from "react-icons/io";
 import { FaHome } from "react-icons/fa";
 import { AiOutlineProduct } from "react-icons/ai";
 import { MdOutlineShoppingCart } from "react-icons/md";
+import UpdateItemModel from "@/components/table/UpdateItemModel";
+
+interface Product {
+  id: number;
+  title: string;
+  productConditions: {
+    colors?: string[];
+    sizes?: string[];
+    labels?: string[];
+  };
+  salesChannel: string;
+}
 
 const Collections = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [updateItemModel, setUpdateItemModel] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<Product | null>(null);
 
   const handleMenuClick = () => {
     setSidebarOpen(false);
@@ -27,9 +41,10 @@ const Collections = () => {
         <ul className="space-y-4">
           <li>
             <Link
-              href="#"
+              href="/dashboard"
               className="flex items-center gap-2 capitalize"
               onClick={handleMenuClick}
+              aria-label="Go to Dashboard"
             >
               <FaHome />
               dashboard
@@ -38,9 +53,10 @@ const Collections = () => {
 
           <li>
             <Link
-              href="#"
+              href="/products"
               className="flex items-center gap-2 capitalize"
               onClick={handleMenuClick}
+              aria-label="Go to Products"
             >
               <AiOutlineProduct />
               urunler
@@ -50,9 +66,10 @@ const Collections = () => {
           <p className="capitalize text-gray-500">satis</p>
           <li>
             <Link
-              href="#"
+              href="/collections"
               className="flex items-center gap-2 capitalize"
               onClick={handleMenuClick}
+              aria-label="Go to Collections"
             >
               <MdOutlineShoppingCart />
               koleksiyon
@@ -61,11 +78,12 @@ const Collections = () => {
         </ul>
       </div>
 
-      {/* setting icon*/}
+      {/* Setting Icon */}
       <button
         className={`absolute left-2 top-5 p-2 bg-gray-200 rounded-full shadow-lg transition-transform hover:scale-110 
           ${sidebarOpen ? "hidden" : "block md:hidden"}`}
         onClick={() => setSidebarOpen(true)}
+        aria-label="Open Sidebar"
       >
         <IoMdSettings size={25} />
       </button>
@@ -97,7 +115,12 @@ const Collections = () => {
                 </tr>
               </thead>
               {/* Table Body */}
-              <TableBody />
+              <tbody className="divide-y divide-gray-200">
+                <TableBody
+                  setUpdateItemModel={setUpdateItemModel}
+                  setSelectedItem={setSelectedItem}
+                />
+              </tbody>
             </table>
           </div>
 
@@ -105,6 +128,14 @@ const Collections = () => {
           <Paginate />
         </div>
       </div>
+
+      {/* Update Item Modal */}
+      {updateItemModel && (
+        <UpdateItemModel
+          setUpdateItemModel={setUpdateItemModel}
+          selectedItem={selectedItem}
+        />
+      )}
     </div>
   );
 };

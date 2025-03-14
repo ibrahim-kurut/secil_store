@@ -3,7 +3,6 @@
 import { useState, useCallback } from "react";
 import { data as initialData } from "../../../data/collections";
 import swal from "sweetalert";
-import UpdateItemModel from "./UpdateItemModel";
 
 interface ProductConditions {
   colors?: string[];
@@ -14,9 +13,19 @@ interface ProductConditions {
 interface Product {
   id: number;
   title: string;
-  productConditions: ProductConditions;
+  productConditions: {
+    colors?: string[];
+    sizes?: string[];
+    labels?: string[];
+  };
   salesChannel: string;
 }
+
+interface TableBodyProps {
+  setUpdateItemModel: (value: boolean) => void;
+  setSelectedItem: (item: Product | null) => void;
+}
+
 const formatProductConditions = (conditions: ProductConditions): string => {
   const parts = [];
 
@@ -33,21 +42,23 @@ const formatProductConditions = (conditions: ProductConditions): string => {
   return parts.join("; ");
 };
 
-const TableBody = () => {
+const TableBody: React.FC<TableBodyProps> = ({
+  setUpdateItemModel,
+  setSelectedItem,
+}) => {
   const [data, setData] = useState(initialData);
-  const [selectedItem, setSelectedItem] = useState<Product | null>(null);
-  const [updateItemModel, setUpdateItemModel] = useState(false);
 
-  // handle update items
+  // Handle update item
   const handleUpdateItem = (item: Product) => {
     setSelectedItem(item);
     setUpdateItemModel(true);
   };
 
+  // Handle delete item
   const handleDelete = useCallback(
     (id: number) => {
       swal({
-        title: `Are you sure ?`,
+        title: `Are you sure?`,
         text: "Once deleted, you will not be able to recover this file!",
         icon: "warning",
         buttons: ["Cancel", "Ok"],
@@ -70,44 +81,36 @@ const TableBody = () => {
   return (
     <>
       {data.map((item) => (
-        <tbody key={item.id} className="divide-y divide-gray-200">
-          <tr>
-            <td className="px-4 py-2 font-medium whitespace-nowrap text-gray-900">
-              {item.title}
-            </td>
-            <td className="px-4 py-2 whitespace-nowrap text-gray-700">
-              {formatProductConditions(item.productConditions)}
-            </td>
-            <td className="px-4 py-2 whitespace-nowrap text-gray-700">
-              {item.salesChannel}
-            </td>
-            <td className="px-4 py-2 whitespace-nowrap text-gray-700">
-              <div className="flex gap-2">
-                <button
-                  className="bg-green-500 hover:bg-green-700 text-white font-bold px-2 rounded"
-                  aria-label="Edit Product"
-                  onClick={() => handleUpdateItem(item)}
-                >
-                  edit
-                </button>
-                <button
-                  className="bg-red-500 hover:bg-red-700 text-white font-bold px-2 rounded cursor-pointer"
-                  aria-label="Delete Product"
-                  onClick={() => handleDelete(item.id)}
-                >
-                  delete
-                </button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
+        <tr key={item.id}>
+          <td className="px-4 py-2 font-medium whitespace-nowrap text-gray-900">
+            {item.title}
+          </td>
+          <td className="px-4 py-2 whitespace-nowrap text-gray-700">
+            {formatProductConditions(item.productConditions)}
+          </td>
+          <td className="px-4 py-2 whitespace-nowrap text-gray-700">
+            {item.salesChannel}
+          </td>
+          <td className="px-4 py-2 whitespace-nowrap text-gray-700">
+            <div className="flex gap-2">
+              <button
+                className="bg-green-500 hover:bg-green-700 text-white font-bold px-2 rounded"
+                aria-label="Edit Product"
+                onClick={() => handleUpdateItem(item)}
+              >
+                edit
+              </button>
+              <button
+                className="bg-red-500 hover:bg-red-700 text-white font-bold px-2 rounded cursor-pointer"
+                aria-label="Delete Product"
+                onClick={() => handleDelete(item.id)}
+              >
+                delete
+              </button>
+            </div>
+          </td>
+        </tr>
       ))}
-      {updateItemModel && (
-        <UpdateItemModel
-          setUpdateItemModel={setUpdateItemModel}
-          selectedItem={selectedItem}
-        />
-      )}
     </>
   );
 };

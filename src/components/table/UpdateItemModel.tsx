@@ -22,7 +22,7 @@ const UpdateItemModel: React.FC<UpdateItemModelProps> = ({
   setUpdateItemModel,
   selectedItem,
 }) => {
-  //Data formation function
+  // Function to format product conditions
   const formatProductConditions = (data: ProductConditions): string => {
     const parts = [];
 
@@ -38,9 +38,10 @@ const UpdateItemModel: React.FC<UpdateItemModelProps> = ({
 
     return parts.join("; ");
   };
+
   return (
-    <>
-      <div className="bg-gray-100 w-1/2 h-1/2 z-10 absolute left-1/2 top-1/2 -translate-1/2 rounded p-5 shadow shadow-gray-300">
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      <div className="bg-gray-200 w-1/2 h-1/2 z-10 rounded p-5 shadow shadow-gray-300 relative">
         <div className="flex justify-end">
           <span
             onClick={() => setUpdateItemModel(false)}
@@ -89,7 +90,7 @@ const UpdateItemModel: React.FC<UpdateItemModelProps> = ({
           </label>
 
           <label
-            htmlFor="	satis kanali"
+            htmlFor="satis kanali"
             className="relative block overflow-hidden border-b border-gray-200 bg-transparent pt-3 focus-within:border-blue-600"
           >
             <input
@@ -117,7 +118,7 @@ const UpdateItemModel: React.FC<UpdateItemModelProps> = ({
           </div>
         </form>
       </div>
-    </>
+    </div>
   );
 };
 
